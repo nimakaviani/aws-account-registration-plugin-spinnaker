@@ -31,7 +31,6 @@ import java.util.List;
 // Must use PrivilegedSpringPlugin because we need to load our beans in main application context.
 @Slf4j
 public class AccountRegistrationPlugin extends PrivilegedSpringPlugin {
-
     public AccountRegistrationPlugin(PluginWrapper wrapper) {
         super(wrapper);
     }
@@ -46,13 +45,13 @@ public class AccountRegistrationPlugin extends PrivilegedSpringPlugin {
             log.error("Could not register bean {}", lazyLoadCredentialsRepositoryDefinition.getBeanClassName());
         }
         List<Class> classes = new ArrayList<>(Arrays.asList(
-                EcsCredentialsDefinitionSource.class,
-                AwsCredentialsDefinitionSource.class,
+                AccountSourceRegistrar.class,
                 AccountsStatus.class));
+
         for (Class classToAdd : classes) {
             BeanDefinition beanDefinition = beanDefinitionFor(classToAdd);
             try {
-                log.debug("Registering bean: {}", beanDefinition.getBeanClassName());
+                log.info("Registering bean: {}", beanDefinition.getBeanClassName());
                 registerBean(beanDefinition, registry);
             } catch (ClassNotFoundException e) {
                 log.error("Could not register bean {}", beanDefinition.getBeanClassName());

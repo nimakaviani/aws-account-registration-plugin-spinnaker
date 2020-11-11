@@ -181,16 +181,19 @@ public class AccountsStatus {
                 ec2Accounts.put(currentAccount.getName(), currentAccount);
             }
         }
-        for (ECSCredentialsConfig.Account currentECSAccount : ecsCredentialsConfig.getAccounts()) {
-            for (ECSCredentialsConfig.Account sourceAccount : ecsAccounts.values()) {
-                if (currentECSAccount.getName().equals(sourceAccount.getName()) || deletedAccounts.contains(currentECSAccount.getAwsAccount())) {
-                    log.info("Account info for existing ECS account \"{}\" will be updated.", sourceAccount.getName());
-                    currentECSAccount = null;
-                    break;
+
+        if (ecsCredentialsConfig != null) {
+            for (ECSCredentialsConfig.Account currentECSAccount : ecsCredentialsConfig.getAccounts()) {
+                for (ECSCredentialsConfig.Account sourceAccount : ecsAccounts.values()) {
+                    if (currentECSAccount.getName().equals(sourceAccount.getName()) || deletedAccounts.contains(currentECSAccount.getAwsAccount())) {
+                        log.info("Account info for existing ECS account \"{}\" will be updated.", sourceAccount.getName());
+                        currentECSAccount = null;
+                        break;
+                    }
                 }
-            }
-            if (currentECSAccount != null) {
-                ecsAccounts.put(currentECSAccount.getName(), currentECSAccount);
+                if (currentECSAccount != null) {
+                    ecsAccounts.put(currentECSAccount.getName(), currentECSAccount);
+                }
             }
         }
         for (String deletedAccount : deletedAccounts) {
